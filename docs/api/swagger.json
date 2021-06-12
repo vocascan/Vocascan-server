@@ -3,7 +3,7 @@
   "info": {
     "title": "vocascan",
     "description": "A highly configurable vocabulary trainer.",
-    "version": "1.0.0"
+    "version": "v0.1-alpha"
   },
   "servers": [
     {
@@ -25,10 +25,10 @@
         }
       }
     },
-    "/auth/register": {
+    "/api/user/register": {
       "post": {
         "summary": "Register new user",
-        "tags": ["auth"],
+        "tags": ["AUTH"],
         "operationId": "userRegister",
         "security": [],
         "requestBody": {
@@ -44,10 +44,10 @@
         }
       }
     },
-    "/auth/login": {
+    "/api/user/login": {
       "post": {
         "summary": "Login user",
-        "tags": ["auth"],
+        "tags": ["AUTH"],
         "operationId": "userLogin",
         "security": [],
         "requestBody": {
@@ -69,10 +69,10 @@
         }
       }
     },
-    "/auth": {
+    "/api/user": {
       "get": {
         "summary": "Get own profile",
-        "tags": ["auth"],
+        "tags": ["AUTH"],
         "operationId": "getUserProfile",
         "responses": {
           "200": {
@@ -83,6 +83,418 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          }
+        }
+      },
+
+      "delete": {
+        "summary": "Delete user",
+        "tags": ["DELETE"],
+        "operationId": "deleteUser",
+        "security": [],
+        "description": "Nothing needed. UserId gets parsed from JWT",
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/languagePackage": {
+      "post": {
+        "summary": "Create language package for user",
+        "tags": ["CREATE"],
+        "operationId": "createLanguagePackage",
+        "security": [],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CreateLanguagePackage"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateLanguagePackage"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+
+      "get": {
+        "summary": "Get all language packages",
+        "tags": ["GET"],
+        "operationId": "getLanguagePackage",
+        "parameters": [
+          {"$ref": "#/components/parameters/groups"},
+          {"$ref": "#/components/parameters/stats"}
+
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetLanguagePackage"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/user/stats": {
+      "get": {
+        "summary": "Get stats about user",
+        "tags": ["GET"],
+        "operationId": "getUserStats",
+        "security": [],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetUserStats"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/languagePackage/{languagePackageId}/group": {
+      "post": {
+        "summary": "Create group for language package",
+        "tags": ["CREATE"],
+        "operationId": "createGroup",
+        "security": [],
+        "parameters": [
+          {"$ref": "#/components/parameters/languagePackageId"}
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CreateGroup"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CreateGroup"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+
+      "get": {
+        "summary": "Get groups belonging to language package",
+        "tags": ["GET"],
+        "operationId": "getGroups",
+        "security": [],
+        "parameters": [
+          {"$ref": "#/components/parameters/languagePackageId"}
+
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetGroups"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/languagePackage/{languagePackageId}/group/{groupId}/vocabulary": {
+      "post": {
+        "summary": "Create vocabulary card",
+        "tags": ["CREATE"],
+        "operationId": "createVocabulary",
+        "security": [],
+        "parameters": [
+          {"$ref": "#/components/parameters/languagePackageId"},
+          {"$ref": "#/components/parameters/groupId"},
+          {"$ref": "#/components/parameters/active"},
+          {"$ref": "#/components/parameters/activate"}
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CreateVocabulary"
+        },
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/CreateVocabulary"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/group/{groupId}/vocabulary": {
+      "get": {
+        "summary": "Get all vocabulary belonging to specific group",
+        "tags": ["GET"],
+        "operationId": "getGroupVocabulary",
+        "security": [],
+        "parameters": [{ "$ref": "#/components/parameters/groupId"}],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GetGroupVocabulary"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/languagePackage/{languagePackageId}/query": {
+      "get": {
+        "summary": "Get vocabulary where timer from last query expired. Only as many words are returned as specified in the limit.",
+        "tags": ["QUERY"],
+        "operationId": "startQuery",
+        "security": [],
+        "parameters": [
+          {"$ref": "#/components/parameters/languagePackageId"},
+          {"$ref": "#/components/parameters/limit"},
+          {"$ref": "#/components/parameters/staged"}
+
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/StartQuery"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/vocabulary/{vocabularyId}": {
+      "delete": {
+        "summary": "Delete vocabulary card",
+        "tags": ["DELETE"],
+        "operationId": "deleteVocabulary",
+        "security": [],
+        "parameters": [{ "$ref": "#/components/parameters/vocabularyId"}],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Handles your result. moves vocabulary in the drawers depending on whether they were answered correctly or incorrectly",
+        "tags": ["VALIDATION"],
+        "operationId": "checkVocabulary",
+        "security": [],
+        "parameters": [
+          {"$ref": "#/components/parameters/vocabularyId"},
+          {"$ref": "#/components/parameters/answer"},
+          {"$ref": "#/components/parameters/progress"}
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/CheckQuery"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modify vocabulary card",
+        "tags": ["MODIFY"],
+        "operationId": "modifyVocabulary",
+        "security": [],
+        "parameters": [{ "$ref": "#/components/parameters/vocabularyId"}],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/group/{groupId}": {
+      "delete": {
+        "summary": "Delete group",
+        "tags": ["DELETE"],
+        "operationId": "deleteGroup",
+        "security": [],
+        "parameters": [{ "$ref": "#/components/parameters/groupId"}],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modify group",
+        "tags": ["MODIFY"],
+        "operationId": "modifyGroup",
+        "security": [],
+        "parameters": [{ "$ref": "#/components/parameters/groupId"}],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/languagePackage/{languagePackageId}": {
+      "delete": {
+        "summary": "Delete language package",
+        "tags": ["DELETE"],
+        "operationId": "deleteLanguagePackage",
+        "security": [],
+        "parameters": [{ "$ref": "#/components/parameters/languagePackageId"}],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modify a language package",
+        "tags": ["MODIFY"],
+        "operationId": "modifyLanguagePackage",
+        "parameters": [
+          {"$ref": "#/components/parameters/languagePackageId"}
+
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/204"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/api/info": {
+      "get": {
+        "summary": "Get server info",
+        "tags": ["INFO"],
+        "operationId": "getServerInfo",
+        "security": [],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/GetServerInfo"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       }
@@ -101,15 +513,257 @@
           "username": {
             "type": "string",
             "nullable": true
-          },
-          "email": {
+          }
+        }
+      },
+      "LanguagePackage": {
+        "description": "LanguagePackage",
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string",
-            "format": "email"
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "foreignWordLanguage": {
+            "type": "string"
+          },
+          "translatedWordLanguage": {
+            "type": "string"
+          },
+          "vocabsPerDay": {
+            "type": "integer"
+          },
+          "rightWords": {
+            "type": "integer"
+          }
+        }
+      },
+      "Group": {
+        "description": "Group",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Stats": {
+        "description": "Stats",
+        "type": "object",
+        "properties": {
+          "vocabularies": {
+            "type": "object",
+            "properties": {
+              "all": {
+                "type": "integer"
+              },
+              "active": {
+                "type": "integer"
+              },
+              "inactive": {
+                "type": "integer"
+              },
+              "unresolved": {
+                "type": "integer"
+              },
+              "unactivated": {
+                "type": "integer"
+              },
+              "learnedToday": {
+                "type": "object",
+                "properties": {
+                  "dueToday": {
+                    "type": "integer"
+                  },
+                  "correct": {
+                    "type": "integer"
+                  },
+                  "wrong": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Vocabulary": {
+        "description": "Vocabulary",
+        "type": "object",
+        "properties": {
+          "stage": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "Translations": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+                
+            }
+          }
+        }
+      },
+      "Progress": {
+        "description": "Progress",
+        "type": "object",
+        "properties": {
+          "queryProgress": {
+            "type": "object",
+            "properties": {
+              "dueToday": {
+                "type": "string"
+              },
+              "correct": {
+                "type": "string"
+              },
+              "wrong": {
+                "type": "string"
+              }
+            }
+          }        
+        }
+      },
+      "Info": {
+        "description": "Info",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "commitRef": {
+            "type": "string"
           }
         }
       }
+    },    
+    "parameters": {
+      "languagePackageId": {
+        "in": "path",
+        "name": "languagePackageId",
+        "description": "Id from language package",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "groupId": {
+        "in": "path",
+        "name": "groupId",
+        "description": "Id from group",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "vocabularyId": {
+        "in": "path",
+        "name": "vocabularyId",
+        "description": "Id from vocabulary card",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "limit": {
+        "in": "query",
+        "name": "limit",
+        "description": "Limit defines the number of returned vocabulary from a request. Staged queries don't need a limit. Standart Limit: 100",
+        "required": true,
+        "schema": {
+          "type": "number"
+        }
+      },
+      "groups": {
+        "in": "query",
+        "name": "groups",
+        "description": "decides if groups are included in response",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "stats": {
+        "in": "query",
+        "name": "stats",
+        "description": "decides if stats are included in response",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "active": {
+        "in": "query",
+        "name": "active",
+        "description": "decides if this part gets included in querys",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "activate": {
+        "in": "query",
+        "name": "activate",
+        "description": "decides if vocabs need to be activated before putting them into query drawers",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "staged": {
+        "in": "query",
+        "name": "staged",
+        "description": "If true, all unactivated vocabs will be returned",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "answer": {
+        "in": "query",
+        "name": "answer",
+        "description": "type in whether your answer was right or wrong",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "progress": {
+        "in": "query",
+        "name": "progress",
+        "description": "If true, the progress will be returned",
+        "schema": {
+          "type": "boolean"
+        }
+      }
     },
-    "parameters": {},
     "requestBodies": {
       "UserRegister": {
         "description": "Register User details",
@@ -158,6 +812,92 @@
             }
           }
         }
+      },
+      "CreateLanguagePackage": {
+        "description": "Create language package details",
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Create language package details",
+              "type": "object",
+              "required": ["name", "foreignWordLanguage", "translatedWordLanguage", "vocabsPerDay", "rightWords"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "foreignWordLanguage": {
+                  "type": "string"
+                },
+                "translatedWordLanguage": {
+                  "type": "string"
+                },
+                "vocabsPerDay": {
+                  "type": "integer"
+                },
+                "rightWords": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateGroup": {
+        "description": "Create group details",
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Create group details",
+              "type": "object",
+              "required": ["name", "active"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "active": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateVocabulary": {
+        "description": "add foreign word and translations",
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "Create vocabulary details",
+              "type": "object",
+              "required": ["name", "active"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "active": {
+                  "type": "boolean"
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+                
+              }
+            }
+          }
+        }
       }
     },
     "responses": {
@@ -191,6 +931,206 @@
                   "type": "string"
                 }
               }
+            }
+          }
+        }
+      },
+      "CreateLanguagePackage": {
+        "description": "Create language package response",
+        "content": {
+          "application/json": {
+            "schema": {
+                "$ref": "#/components/schemas/LanguagePackage"
+            }
+          }
+        }
+      },
+      "CreateGroup": {
+        "description": "Create group for language package",
+        "content": {
+          "application/json": {
+            "schema": {
+                "$ref": "#/components/schemas/Group"
+            }
+          }
+        }
+      },
+      "CreateVocabulary": {
+        "description": "Create vocabulary",
+        "content": {
+          "application/json": {
+            "schema": {
+                "$ref": "#/components/schemas/Vocabulary"
+            }
+          }
+        }
+      },
+      "GetLanguagePackage": {
+        "description": "Returns infos about languagePackage",
+        "content": {
+          "application/json": {
+            "schema": {
+            "type": "array",
+              "items": {
+                "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "foreignWordLanguage": {
+                      "type": "string"
+                    },
+                    "translatedWordLanguage": {
+                      "type": "string"
+                    },
+                    "vocabsPerDay": {
+                      "type": "integer"
+                    },
+                    "rightWords": {
+                      "type": "integer"
+                    },
+                    "Groups": { 
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Group"
+                      }
+                    },
+                    "stats": {"$ref": "#/components/schemas/Stats"}
+                  }
+                  
+                  
+              }
+            }
+          }
+        }
+      },
+      "GetGroups": {
+        "description": "Returns info about Groups belonging to a language package",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Group"
+              }
+            }
+          }
+        }
+      },
+      "GetGroupVocabulary": {
+        "description": "Returns info about all Vocabulary belonging to a group",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Vocabulary"
+              }
+            }
+          }
+        }
+      },
+      "GetUserStats": {
+        "description": "Returns info about all the stats from a user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "languagePackages": {
+                  "type": "object",
+                  "properties": {
+                    "all": {
+                      "type": "integer"
+                    } 
+                  }
+                },
+                "groups": {
+                  "type": "object",
+                  "properties": {
+                    "all": {
+                      "type": "integer"
+                    },
+                    "active": {
+                      "type": "integer"
+                    },
+                    "inactive": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "vocabularies": {
+                  "type": "object",
+                  "properties": {
+                    "all": {
+                      "type": "integer"
+                    },
+                    "active": {
+                      "type": "integer"
+                    },
+                    "inactive": {
+                      "type": "integer"
+                    },
+                    "unresolved": {
+                      "type": "integer"
+                    },
+                    "unactivated": {
+                      "type": "integer"
+                    },
+                    "learnedToday": {
+                      "type": "object",
+                      "properties": {
+                        "dueToday": {
+                          "type": "integer"
+                        },
+                        "correct": {
+                          "type": "integer"
+                        },
+                        "wrong": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "StartQuery": {
+        "description": "returns vocabulary with limit",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Vocabulary"
+              }
+            }
+          }
+        }
+      },
+      "CheckQuery": {
+        "description": "If progress = true: Progress gets returned",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Progress"
+            }
+          }
+        }
+      },
+      "GetServerInfo": {
+        "description": "Returns information about server",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Info"
             }
           }
         }
